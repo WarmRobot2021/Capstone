@@ -31,13 +31,21 @@ public class OrgController {
     }
 
     @GetMapping("/Organizations/{id}")
-    public ResponseEntity<ArrayList<Organizations>> getOrganizationsByID(@PathVariable final int id) {
+    public ResponseEntity<Organizations> getOrganizationsByID(@PathVariable final int id) {
 
         System.out.println(id);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(od.getOrganizationsById(id));
 
+    }
+
+    @GetMapping("/Organizations/Categories/{category}")
+    public ResponseEntity<ArrayList<Organizations>> getOrganizationsByCategory(@PathVariable String category) {
+
+        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(od.getOrganizationsByCategory(category));
     }
 
     @PostMapping("/Organizations")

@@ -73,7 +73,7 @@ public class OrgData {
     }
 
 
-    public ArrayList<Organizations> getOrganizationsById(int org_id){
+    public Organizations getOrganizationsById(int org_id) {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -112,8 +112,51 @@ public class OrgData {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        return result.get(0);
+    }
+
+    protected ArrayList<Organizations> getOrganizationsByCategory(String category) {
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Organizations org = null;
+        ArrayList<Organizations> result = new ArrayList<Organizations>();
+
+        try {
+            preparedStatement = conn.prepareStatement("SELECT * FROM Organizations WHERE org_id IN (SELECT org_id FROM Services WHERE service_category =" + category + ")");
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        try {
+
+            while (resultSet.next()) {
+
+                int id = resultSet.getInt("org_id");
+                String orgName = resultSet.getString("org_name");
+                String description = resultSet.getString("description");
+                String number = resultSet.getString("phone_number");
+                String website = resultSet.getString("website");
+                String fax = resultSet.getString("fax");
+                String email = resultSet.getString("email");
+                String address = resultSet.getString("address");
+                double longitude = resultSet.getDouble("longitude");
+                double latitude = resultSet.getDouble("latitude");
+
+                org = new Organizations(id, orgName, description, number, website, fax, email, address, longitude, latitude);
+
+                result.add(org);
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return result;
     }
+
 
 
 

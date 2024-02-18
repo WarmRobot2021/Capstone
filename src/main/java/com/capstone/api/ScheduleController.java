@@ -40,6 +40,15 @@ public class ScheduleController {
 
     }
 
+    //SELECT * FROM Organizations, Services, Schedule
+    //WHERE Services.org_id = Organizations.org_id
+    //AND Services.service_id = Schedule.service_id
+    //AND Schedule.day_of_week = dayname(now())
+    //AND Schedule.open_time < now()
+    //AND Schedule.close_time < now()
+    //AND Services.service_category = {selected category} 
+    //Get schedule by open, day, org id, and service id
+
     @PostMapping("/Schedule")
     public void updateOrganization(@RequestBody(required = true) Schedule sched){
 

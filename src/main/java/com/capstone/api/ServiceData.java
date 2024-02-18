@@ -147,6 +147,80 @@ public class ServiceData {
         return result;
 
     }
+
+    protected ArrayList<String> getServiceCategories() {
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        ArrayList<String> result = new ArrayList<String>();
+
+        try {
+
+
+            preparedStatement = conn.prepareStatement("SELECT DISTINCT service_category FROM Services");
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        try {
+
+            while (resultSet.next()) {
+
+                String category = resultSet.getString("service_category");
+                result.add(category);
+
+            }
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    protected ArrayList<Service> getServicesByCategory(String serviceCategory) {
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Service serv = null;
+        ArrayList<Service> result = new ArrayList<Service>();
+
+
+        try {
+
+
+            preparedStatement = conn.prepareStatement("SELECT * FROM Services WHERE service_category =" + serviceCategory);
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        try {
+
+            while (resultSet.next()) {
+
+                int orgId = resultSet.getInt("org_id");
+                int serviceId = resultSet.getInt("service_id");
+                String name = resultSet.getString("service_name");
+                String category = resultSet.getString("service_category");
+
+                serv = new Service(orgId, serviceId, name, category);
+                result.add(serv);
+
+            }
+
+
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
     protected void insert(Service serv) {
 
         PreparedStatement prep = null;
