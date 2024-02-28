@@ -157,10 +157,6 @@ public class OrgData {
         return result;
     }
 
-
-
-
-
     protected void insert(Organizations org) {
 
         PreparedStatement prep = null;

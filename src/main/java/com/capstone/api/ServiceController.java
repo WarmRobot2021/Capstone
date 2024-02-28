@@ -50,7 +50,7 @@ public class ServiceController {
 
 
     }
-
+/*
     @GetMapping("/Services/Categories/{category}")
     public ResponseEntity<ArrayList<Service>> getServicesByCategory(@PathVariable String category) {
 
@@ -58,6 +58,24 @@ public class ServiceController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(sd.getServicesByCategory(category));
 
+    }
+//SELECT * FROM Organizations, Services, Schedule
+    //WHERE Services.org_id = Organizations.org_id
+    //AND Services.service_id = Schedule.service_id
+    //AND Schedule.day_of_week = dayname(now())
+    //AND Schedule.open_time < now()
+    //AND Schedule.close_time < now()
+    //AND Services.service_category = {selected category}
+    //Get schedule by open, day, org id, and service id
+*/
+    @GetMapping("services/schedule/")
+    public ResponseEntity<ArrayList<Service>> getServicesByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
+
+        System.out.println(open);
+        System.out.println(category);
+        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(sd.getServicesByOpen(open, category));
     }
 
 

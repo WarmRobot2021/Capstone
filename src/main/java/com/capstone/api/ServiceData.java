@@ -180,7 +180,7 @@ public class ServiceData {
         }
         return result;
     }
-
+/*
     protected ArrayList<Service> getServicesByCategory(String serviceCategory) {
 
         PreparedStatement preparedStatement = null;
@@ -217,6 +217,61 @@ public class ServiceData {
 
         }catch(SQLException e) {
             e.printStackTrace();
+        }
+
+        return result;
+    }
+*/
+    protected ArrayList<Service> getServicesByOpen(boolean open, String cat) {
+
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Service serv = null;
+        ArrayList<Service> result = new ArrayList<Service>();
+
+        try {
+
+            String sql = "SELECT * FROM Organizations, Services, Schedule"
+                    + " WHERE Services.org_id = Organizations.org_id"
+                    + " AND Services.service_id = Schedule.service_id";
+            if (open) {
+                sql += " AND Schedule.day_of_week = dayname(now())"
+                        + " AND Schedule.open_time < now()"
+                        + " AND Schedule.close_time > now()";
+            }
+
+             if (cat != null) sql += " AND LOWER(Services.service_category) = '" + cat.toLowerCase() + "'";
+
+            System.out.println(sql);
+            preparedStatement = conn.prepareStatement(sql);
+
+            resultSet = preparedStatement.executeQuery();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+
+        try {
+
+            while (resultSet.next()) {
+
+                int orgId = resultSet.getInt("org_id");
+                int serviceId = resultSet.getInt("service_id");
+                String name = resultSet.getString("service_name");
+                String category = resultSet.getString("service_category");
+
+                serv = new Service(orgId, serviceId, name, category);
+                result.add(serv);
+
+            }
+        }
+
+        catch (SQLException e) {
+
+            e.printStackTrace();
+
         }
 
         return result;
