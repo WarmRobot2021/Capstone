@@ -20,7 +20,7 @@ public class OrgController {
 
     }
 
-    @GetMapping("/Organizations")
+    @GetMapping("/organizations")
     public ResponseEntity<ArrayList<Organizations>> getOrganizations() {
 
         return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
@@ -30,7 +30,7 @@ public class OrgController {
 
     }
 
-    @GetMapping("/Organizations/{id}")
+    @GetMapping("/organizations/{id}")
     public ResponseEntity<Organizations> getOrganizationsByID(@PathVariable final int id) {
 
         System.out.println(id);
@@ -40,7 +40,7 @@ public class OrgController {
 
     }
 
-    @GetMapping("/Organizations/Categories/{category}")
+    @GetMapping("/organizations/categories/{category}")
     public ResponseEntity<ArrayList<Organizations>> getOrganizationsByCategory(@PathVariable String category) {
 
         return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
@@ -48,21 +48,21 @@ public class OrgController {
                 .body(od.getOrganizationsByCategory(category));
     }
 
-    @PostMapping("/Organizations")
+    @PostMapping("/organizations")
     public ResponseEntity updateOrganization(@RequestBody(required = true) Organizations org){
 
         od.insert(org);
         return ResponseEntity.ok(HttpStatus.OK);
 
     }
-    @PutMapping("/Organizations")
+    @PutMapping("/organizations")
     public void updateOrg(@RequestBody(required = true) Organizations org) {
 
         od.update(org);
 
     }
 
-    @DeleteMapping("/Organizations/{id}")
+    @DeleteMapping("/organizations/{id}")
     public void deleteOrg(@PathVariable final int id) {
 
         od.delete(id);
