@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,13 +70,14 @@ public class ServiceController {
     //Get schedule by open, day, org id, and service id
 */
     @GetMapping("services/schedule/")
-    public ResponseEntity<ArrayList<Service>> getServicesByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
+    public ResponseEntity<HashMap<String, Object>> getByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
 
         System.out.println(open);
         System.out.println(category);
         return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(sd.getServicesByOpen(open, category));
+                .body(sd.getByOpen(open, category));
+
     }
 
 

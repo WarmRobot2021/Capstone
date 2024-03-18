@@ -55,7 +55,6 @@ public class OrgController {
         return ResponseEntity.ok(HttpStatus.OK);
 
     }
-
     @PutMapping("/Organizations")
     public void updateOrg(@RequestBody(required = true) Organizations org) {
 

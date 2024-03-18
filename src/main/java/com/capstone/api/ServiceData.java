@@ -1,11 +1,8 @@
 package com.capstone.api;
-import java.sql.Connection;
+import java.sql.*;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServiceData {
 
@@ -221,32 +218,99 @@ public class ServiceData {
 
         return result;
     }
-*/
-    protected ArrayList<Service> getServicesByOpen(boolean open, String cat) {
+
+    /*
+    protected HashMap<String, Object> getByOpen{
+
+        PreparedStatement prep = null;
+        ResultSet resultSet = null;
+        Service serv = null;
+        Organization org = null;
+        Schedule sched = null;
+        HashMap<String, Object> results = new HashMap<String,Object>();
+
+        try {
+
+            String sql =
+ */
+
+
+    protected HashMap<String, Object> getByOpen(boolean open, String cat) {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         Service serv = null;
-        ArrayList<Service> result = new ArrayList<Service>();
+        Organizations org = null;
+        Schedule sched = null;
+        HashMap<String, Object> results = new HashMap<String, Object>();
 
         try {
 
-            String sql = "SELECT * FROM Organizations, Services, Schedule"
-                    + " WHERE Services.org_id = Organizations.org_id"
-                    + " AND Services.service_id = Schedule.service_id";
-            if (open) {
-                sql += " AND Schedule.day_of_week = dayname(now())"
-                        + " AND Schedule.open_time < now()"
-                        + " AND Schedule.close_time > now()";
+            String sql;
+
+            if (open && cat != null) {
+
+                sql = "SELECT * FROM Services s"
+                        + " LEFT JOIN Schedule sched on s.service_id = sched.service_id"
+                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
+                        + " AND sched.day_of_week = dayname(now())"
+                        + " AND sched.open_time < now()"
+                        + " AND sched.close_time > now()"
+                        + " UNION"
+                        + " SELECT * FROM Services s"
+                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id"
+                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
+                        + " AND sched.day_of_week = dayname(now())"
+                        + " AND sched.open_time < now()"
+                        + " AND sched.close_time > now()";
+
+            } else if (open) {
+
+                sql = "SELECT * FROM Services s"
+                        + " LEFT JOIN Schedule sched on s.service_id = sched.service_id"
+                        + " WHERE sched.day_of_week = dayname(now())"
+                        + " AND sched.open_time < now()"
+                        + " AND sched.close_time > now()";
+
+            } else if (cat != null) {
+
+                sql = "SELECT * FROM Services s"
+                        + " LEFT JOIN Schedule sched ON s.service_id = sched.service_id"
+                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
+                        + " UNION"
+                        + " SELECT * FROM Services s"
+                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id"
+                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'";
+
+            } else {
+
+                sql = "SELECT * FROM Services s"
+                        + " LEFT JOIN Schedule sched ON s.service_id = sched.service_id"
+                        + " UNION"
+                        + " SELECT * FROM Services s"
+                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id";
+
             }
 
-             if (cat != null) sql += " AND LOWER(Services.service_category) = '" + cat.toLowerCase() + "'";
-
-            System.out.println(sql);
             preparedStatement = conn.prepareStatement(sql);
-
             resultSet = preparedStatement.executeQuery();
+           /* ResultSetMetaData rsmd = resultSet.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
 
+            while (resultSet.next()) {
+
+                for (int i = 1; i <= columnsNumber; i++) {
+
+                    if (i > 1) System.out.print(", ");
+                    String columnValue = resultSet.getString(i);
+                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
+
+                }
+
+                System.out.println("");
+            }
+
+*/
         } catch (SQLException e) {
 
             e.printStackTrace();
@@ -255,15 +319,22 @@ public class ServiceData {
 
         try {
 
-            while (resultSet.next()) {
+               while (resultSet.next()) {
 
-                int orgId = resultSet.getInt("org_id");
+                int servOrgId = resultSet.getInt("org_id");
                 int serviceId = resultSet.getInt("service_id");
-                String name = resultSet.getString("service_name");
+                String serviceName = resultSet.getString("service_name");
                 String category = resultSet.getString("service_category");
+                serv = new Service(servOrgId, serviceId, serviceName, category);
+                results.put("Service with service id " + serviceId + " and organization id " + servOrgId, serv);
 
-                serv = new Service(orgId, serviceId, name, category);
-                result.add(serv);
+
+                String day = resultSet.getString("day_of_week");
+                Time openTime = resultSet.getTime("open_time");
+                Time closeTime = resultSet.getTime("close_time");
+                sched = new Schedule(serviceId, day, openTime, closeTime);
+                results.put("Schedule for day " + day + " with service id " + serviceId, sched);
+
 
             }
         }
@@ -274,8 +345,11 @@ public class ServiceData {
 
         }
 
-        return result;
+
+        return results;
+
     }
+
     protected void insert(Service serv) {
 
         PreparedStatement prep = null;
