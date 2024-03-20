@@ -161,7 +161,6 @@ public class OrgData {
 
         PreparedStatement prep = null;
 
-        int id = org.getId();
         String name = org.getName();
         String description = org.getDescription();
         String number = org.getNumber();
@@ -171,15 +170,14 @@ public class OrgData {
 
         try {
 
-            prep = conn.prepareStatement("INSERT INTO Organizations(org_id, org_name, description, phone_number, website, email, address) VALUES(?,?,?,?,?,?,?) ");
+            prep = conn.prepareStatement("INSERT INTO Organizations(org_name, description, phone_number, website, email, address) VALUES(?,?,?,?,?,?) ");
 
-            prep.setInt(1, id);
-            prep.setString(2, name);
-            prep.setString(3, description);
-            prep.setString(4, number);
-            prep.setString(5, website);
-            prep.setString(6, email);
-            prep.setString(7, address);
+            prep.setString(1, name);
+            prep.setString(2, description);
+            prep.setString(3, number);
+            prep.setString(4, website);
+            prep.setString(5, email);
+            prep.setString(6, address);
             prep.executeUpdate();
 
         } catch (SQLException e) {

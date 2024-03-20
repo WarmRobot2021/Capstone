@@ -354,18 +354,16 @@ public class ServiceData {
 
         PreparedStatement prep = null;
         int orgId = serv.getOrgId();
-        int serviceId = serv.getServiceId();
         String name = serv.getName();
         String category = serv.getCategory();
 
 
         try {
 
-            prep = conn.prepareStatement("INSERT INTO Services (org_id, service_id, service_name, service_category) VALUES(?,?,?,?)");
+            prep = conn.prepareStatement("INSERT INTO Services (org_id, service_name, service_category) VALUES(?,?,?)");
             prep.setInt(1, serv.getOrgId());
-            prep.setInt(2, serv.getServiceId());
-            prep.setString(3, serv.getName());
-            prep.setString(4, serv.getCategory());
+            prep.setString(2, serv.getName());
+            prep.setString(3, serv.getCategory());
             prep.executeUpdate();
 
         } catch (SQLException e1) {

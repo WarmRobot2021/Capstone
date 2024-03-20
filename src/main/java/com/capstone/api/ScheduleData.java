@@ -110,6 +110,7 @@ public class ScheduleData {
     protected void insert(Schedule sched) {
 
         PreparedStatement prep = null;
+
         int id = sched.getId();
         String day = sched.getDay();
         Time open = sched.getOpen();
