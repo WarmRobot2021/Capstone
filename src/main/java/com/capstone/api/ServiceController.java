@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class ServiceController {
 
     private ServiceData sd = new ServiceData();
+    private CardData cd = new CardData();
 
     public ServiceController() {
 
         sd.connect("capstone", "root", "CapstoneProjectPass");
+        cd.connect("capstone", "root", "CapstoneProjectPass");
 
     }
 
@@ -70,16 +72,15 @@ public class ServiceController {
     //Get schedule by open, day, org id, and service id
 */
     @GetMapping("services/schedule/")
-    public ResponseEntity<HashMap<String, Object>> getByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
+    public ResponseEntity<ArrayList<Card>> getByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
 
         System.out.println(open);
         System.out.println(category);
         return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(sd.getByOpen(open, category));
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(cd.getByOpen(open, category));
 
-    }
-
+}
 
     @PostMapping("/Services")
     public ResponseEntity updateServices(@RequestBody(required = true) Service serv) {

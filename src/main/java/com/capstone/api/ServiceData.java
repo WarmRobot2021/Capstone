@@ -1,4 +1,10 @@
 package com.capstone.api;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.sql.*;
 
 import java.util.ArrayList;
@@ -235,120 +241,7 @@ public class ServiceData {
  */
 
 
-    protected HashMap<String, Object> getByOpen(boolean open, String cat) {
 
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        Service serv = null;
-        Organizations org = null;
-        Schedule sched = null;
-        HashMap<String, Object> results = new HashMap<String, Object>();
-
-        try {
-
-            String sql;
-
-            if (open && cat != null) {
-
-                sql = "SELECT * FROM Services s"
-                        + " LEFT JOIN Schedule sched on s.service_id = sched.service_id"
-                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
-                        + " AND sched.day_of_week = dayname(now())"
-                        + " AND sched.open_time < now()"
-                        + " AND sched.close_time > now()"
-                        + " UNION"
-                        + " SELECT * FROM Services s"
-                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id"
-                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
-                        + " AND sched.day_of_week = dayname(now())"
-                        + " AND sched.open_time < now()"
-                        + " AND sched.close_time > now()";
-
-            } else if (open) {
-
-                sql = "SELECT * FROM Services s"
-                        + " LEFT JOIN Schedule sched on s.service_id = sched.service_id"
-                        + " WHERE sched.day_of_week = dayname(now())"
-                        + " AND sched.open_time < now()"
-                        + " AND sched.close_time > now()";
-
-            } else if (cat != null) {
-
-                sql = "SELECT * FROM Services s"
-                        + " LEFT JOIN Schedule sched ON s.service_id = sched.service_id"
-                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'"
-                        + " UNION"
-                        + " SELECT * FROM Services s"
-                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id"
-                        + " WHERE LOWER(s.service_category) = '" + cat.toLowerCase() + "'";
-
-            } else {
-
-                sql = "SELECT * FROM Services s"
-                        + " LEFT JOIN Schedule sched ON s.service_id = sched.service_id"
-                        + " UNION"
-                        + " SELECT * FROM Services s"
-                        + " RIGHT JOIN Schedule sched ON s.service_id = sched.service_id";
-
-            }
-
-            preparedStatement = conn.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
-           /* ResultSetMetaData rsmd = resultSet.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-
-            while (resultSet.next()) {
-
-                for (int i = 1; i <= columnsNumber; i++) {
-
-                    if (i > 1) System.out.print(", ");
-                    String columnValue = resultSet.getString(i);
-                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
-
-                }
-
-                System.out.println("");
-            }
-
-*/
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-
-        }
-
-        try {
-
-               while (resultSet.next()) {
-
-                int servOrgId = resultSet.getInt("org_id");
-                int serviceId = resultSet.getInt("service_id");
-                String serviceName = resultSet.getString("service_name");
-                String category = resultSet.getString("service_category");
-                serv = new Service(servOrgId, serviceId, serviceName, category);
-                results.put("Service with service id " + serviceId + " and organization id " + servOrgId, serv);
-
-
-                String day = resultSet.getString("day_of_week");
-                Time openTime = resultSet.getTime("open_time");
-                Time closeTime = resultSet.getTime("close_time");
-                sched = new Schedule(serviceId, day, openTime, closeTime);
-                results.put("Schedule for day " + day + " with service id " + serviceId, sched);
-
-
-            }
-        }
-
-        catch (SQLException e) {
-
-            e.printStackTrace();
-
-        }
-
-
-        return results;
-
-    }
 
     protected void insert(Service serv) {
 

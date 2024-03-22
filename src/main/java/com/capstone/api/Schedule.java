@@ -17,6 +17,14 @@ public class Schedule {
 
     }
 
+    public Schedule(String dayOfWeek, Time openTime, Time closeTime) {
+
+        this.dayOfWeek = dayOfWeek;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+
+    }
+
     public int getId() {
 
         return this.serviceId;
