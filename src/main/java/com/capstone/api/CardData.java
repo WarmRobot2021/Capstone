@@ -95,8 +95,8 @@ public class CardData {
         }
 
         try {
-
-           /*ResultSetMetaData rsmd = resultSet.getMetaData();
+/*
+            ResultSetMetaData rsmd = resultSet.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
 
             while (resultSet.next()) {
@@ -115,7 +115,8 @@ public class CardData {
             int nextServiceId;
             int serviceId;
 
-            while (resultSet.next()) {
+
+           while (resultSet.next()) {
 
                 int orgId = resultSet.getInt("org_id");
                 serviceId = resultSet.getInt("service_id");
@@ -131,8 +132,21 @@ public class CardData {
                 while (resultSet.next()) {
 
                     nextServiceId = resultSet.getInt("service_id");
+                    if (!resultSet.next() && nextServiceId == 11) {
 
-                    if (nextServiceId == serviceId) {
+                        resultSet.previous();
+                        day = resultSet.getString("day_of_week");
+                        openTime = resultSet.getTime("open_time");
+                        closeTime = resultSet.getTime("close_time");
+                        sched = new Schedule(serviceId, day, openTime, closeTime);
+                        schedules.add(sched);
+                        card = new Card(orgId, serviceId, name, category, schedules);
+                        results.add(card);
+
+
+                    }
+
+                    else if (nextServiceId == serviceId && serviceId != 11) {
 
                         day = resultSet.getString("day_of_week");
                         openTime = resultSet.getTime("open_time");
@@ -140,8 +154,20 @@ public class CardData {
                         sched = new Schedule(serviceId, day, openTime, closeTime);
                         schedules.add(sched);
 
+
                     }
 
+                   /* else if (nextServiceId == serviceId && serviceId == 11) {
+
+                        day = resultSet.getString("day_of_week");
+                        openTime = resultSet.getTime("open_time");
+                        closeTime = resultSet.getTime("close_time");
+                        sched = new Schedule(serviceId, day, openTime, closeTime);
+                        schedules.add(sched);
+
+
+                    }
+*/
                     else {
 
                         resultSet.previous();

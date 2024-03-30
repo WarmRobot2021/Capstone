@@ -47,7 +47,7 @@ public class OrgController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(od.getOrganizationsByCategory(category));
     }
-
+    @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/organizations")
     public ResponseEntity updateOrganization(@RequestBody(required = true) Organizations org){
 
