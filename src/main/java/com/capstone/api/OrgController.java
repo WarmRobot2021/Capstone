@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin
 public class OrgController {
 
     private OrgData od = new OrgData();
@@ -23,7 +24,7 @@ public class OrgController {
     @GetMapping("/organizations")
     public ResponseEntity<ArrayList<Organizations>> getOrganizations() {
 
-        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(od.getOrganizations());
 
@@ -34,7 +35,7 @@ public class OrgController {
     public ResponseEntity<Organizations> getOrganizationsByID(@PathVariable final int id) {
 
         System.out.println(id);
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(od.getOrganizationsById(id));
 
@@ -43,11 +44,11 @@ public class OrgController {
     @GetMapping("/organizations/categories/{category}")
     public ResponseEntity<ArrayList<Organizations>> getOrganizationsByCategory(@PathVariable String category) {
 
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(od.getOrganizationsByCategory(category));
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+
     @PostMapping("/organizations")
     public ResponseEntity updateOrganization(@RequestBody(required = true) Organizations org){
 

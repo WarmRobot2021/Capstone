@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 public class ServiceController {
 
     private ServiceData sd = new ServiceData();
@@ -28,7 +29,7 @@ public class ServiceController {
     @GetMapping("/Services")
     public ResponseEntity<ArrayList<Service>> getServices() {
 
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(sd.getServices());
 
@@ -38,7 +39,7 @@ public class ServiceController {
     public ResponseEntity<ArrayList<Service>> getServiceByOrgID(@PathVariable int org_id) {
 
         System.out.println(org_id);
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(sd.getServicesByOrgId(org_id));
 
@@ -47,7 +48,7 @@ public class ServiceController {
     @GetMapping("/Services/Categories")
     public ResponseEntity<ArrayList<String>> getServiceCategories() {
 
-        return ResponseEntity.status(HttpStatus.OK).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(sd.getServiceCategories());
 
@@ -74,9 +75,9 @@ public class ServiceController {
     @GetMapping("services/schedule/")
     public ResponseEntity<ArrayList<Card>> getByOpen(@RequestParam(required = false) boolean open, @RequestParam(required = false) String category) {
 
-        System.out.println(open);
-        System.out.println(category);
-        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
+        //System.out.println(open);
+        //System.out.println(category);
+        return ResponseEntity.status(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON)
             .body(cd.getByOpen(open, category));
 

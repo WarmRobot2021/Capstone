@@ -26,16 +26,12 @@ public class CardData {
 
         }
     }
-
-
-
     protected ArrayList<Card> getByOpen(boolean open, String cat) {
 
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        Card card = null;
-        Schedule sched = null;
         ArrayList<Card> results = new ArrayList<Card>();
+
 
         try {
 
@@ -95,89 +91,37 @@ public class CardData {
         }
 
         try {
-/*
-            ResultSetMetaData rsmd = resultSet.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
+
+            int serviceId = 0;
+            Card card = null;
+            Schedule sched = null;
+            ArrayList<Schedule> schedules;
 
             while (resultSet.next()) {
 
-                for (int i = 1; i < columnsNumber; i++) {
-
-                    if (i > 1) System.out.print(", ");
-                    String columnValue = resultSet.getString(i);
-                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
-
-                }
-
-                System.out.println("");
-
-            }*/
-            int nextServiceId;
-            int serviceId;
-
-
-           while (resultSet.next()) {
-
                 int orgId = resultSet.getInt("org_id");
-                serviceId = resultSet.getInt("service_id");
+                int resultServiceId = resultSet.getInt("service_id");
                 String name = resultSet.getString("service_name");
+                //System.out.println(name);
                 String category = resultSet.getString("service_category");
+                //System.out.println(category);
                 String day = resultSet.getString("day_of_week");
+                //System.out.println(day);
                 Time openTime = resultSet.getTime("open_time");
+                // System.out.println(openTime);
                 Time closeTime = resultSet.getTime("close_time");
-                sched = new Schedule(serviceId, day, openTime, closeTime);
-                ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-                schedules.add(sched);
+                //System.out.println(closeTime);
 
-                while (resultSet.next()) {
+                if (serviceId != resultServiceId) {
 
-                    nextServiceId = resultSet.getInt("service_id");
-                    if (!resultSet.next() && nextServiceId == 11) {
-
-                        resultSet.previous();
-                        day = resultSet.getString("day_of_week");
-                        openTime = resultSet.getTime("open_time");
-                        closeTime = resultSet.getTime("close_time");
-                        sched = new Schedule(serviceId, day, openTime, closeTime);
-                        schedules.add(sched);
-                        card = new Card(orgId, serviceId, name, category, schedules);
-                        results.add(card);
-
-
-                    }
-
-                    else if (nextServiceId == serviceId && serviceId != 11) {
-
-                        day = resultSet.getString("day_of_week");
-                        openTime = resultSet.getTime("open_time");
-                        closeTime = resultSet.getTime("close_time");
-                        sched = new Schedule(serviceId, day, openTime, closeTime);
-                        schedules.add(sched);
-
-
-                    }
-
-                   /* else if (nextServiceId == serviceId && serviceId == 11) {
-
-                        day = resultSet.getString("day_of_week");
-                        openTime = resultSet.getTime("open_time");
-                        closeTime = resultSet.getTime("close_time");
-                        sched = new Schedule(serviceId, day, openTime, closeTime);
-                        schedules.add(sched);
-
-
-                    }
-*/
-                    else {
-
-                        resultSet.previous();
-                        card = new Card(orgId, serviceId, name, category, schedules);
-                        results.add(card);
-                        break;
-
-                    }
-
+                    schedules = new ArrayList<Schedule>();
+                    card = new Card(orgId, resultServiceId, name, category, schedules);
+                    results.add(card);
                 }
+
+                sched = new Schedule(serviceId, day, openTime, closeTime);
+                card.addSchedule(sched);
+                serviceId = resultServiceId;
 
             }
 

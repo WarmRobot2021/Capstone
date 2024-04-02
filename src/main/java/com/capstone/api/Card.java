@@ -72,6 +72,12 @@ public class Card {
 
     }
 
+    public void addSchedule(Schedule sched) {
+
+        this.schedules.add(sched);
+
+    }
+
     public void setSchedules(ArrayList<Schedule> schedules) {
 
         this.schedules = schedules;

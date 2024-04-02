@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin
 public class ScheduleController {
 
     private ScheduleData schedDate = new ScheduleData();
@@ -23,7 +24,7 @@ public class ScheduleController {
     @GetMapping("/Schedule")
     public ResponseEntity<ArrayList<Schedule>> getSchedules() {
 
-        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(schedDate.getSchedules());
 
@@ -34,7 +35,7 @@ public class ScheduleController {
     public ResponseEntity<ArrayList<Schedule>> getSchedulesById(@PathVariable final int id) {
 
         System.out.println(id);
-        return ResponseEntity.status(HttpStatus.CREATED).header("Access-Control-Allow-Origin", "*")
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(schedDate.getSchedulesById(id));
 
