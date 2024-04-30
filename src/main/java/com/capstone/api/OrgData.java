@@ -123,7 +123,7 @@ public class OrgData {
         ArrayList<Organizations> result = new ArrayList<Organizations>();
 
         try {
-            preparedStatement = conn.prepareStatement("SELECT * FROM Organizations WHERE org_id IN (SELECT org_id FROM Services WHERE service_category =" + category + ")");
+            preparedStatement = conn.prepareStatement("SELECT * FROM Organizations WHERE org_id IN (SELECT org_id FROM Services WHERE service_category ='" + category + "')");
             resultSet = preparedStatement.executeQuery();
 
         } catch (SQLException e1) {

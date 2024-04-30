@@ -1,7 +1,10 @@
 package com.capstone.api;
 
 
+
+
 import java.util.ArrayList;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,61 +12,103 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+
+
 @RestController
 @CrossOrigin
 public class ScheduleController {
 
-    private ScheduleData schedDate = new ScheduleData();
+
+    private ScheduleData schedDat = new ScheduleData();
+
 
     public ScheduleController() {
 
-        schedDate.connect("capstone", "root", "CapstoneProjectPass");
+
+        schedDat.connect("capstone", "root", "CapstoneProjectPass");
+
 
     }
 
-    @GetMapping("/Schedule")
+
+    @GetMapping("/schedule")
     public ResponseEntity<ArrayList<Schedule>> getSchedules() {
 
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(schedDate.getSchedules());
+                .body(schedDat.getSchedules());
+
+
 
 
     }
 
-    @GetMapping("/Schedule/{id}")
-    public ResponseEntity<ArrayList<Schedule>> getSchedulesById(@PathVariable final int id) {
 
-        System.out.println(id);
+    @GetMapping("/schedule/{id}")
+    public ResponseEntity<ArrayList<Schedule>> getScheduleById(@PathVariable int id) {
+
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(schedDate.getSchedulesById(id));
-
-    }
-
-
-
-
-    @PostMapping("/Schedule")
-    public void updateOrganization(@RequestBody(required = true) Schedule sched){
-
-        schedDate.insert(sched);
+                .body(schedDat.getSchedulesByServiceId(id));
 
 
     }
 
-    @PutMapping("/Schedule")
-    public void updateOrg(@RequestBody(required = true) Schedule sched) {
 
-        schedDate.update(sched);
+    @GetMapping("/schedule/{id}/{name}")
+    public ResponseEntity<ArrayList<Schedule>> getScheduleByName(@PathVariable int id, @PathVariable String name) {
+
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(schedDat.getSchedulesByName(id, name));
+
+
+    }
+
+
+    @PostMapping("/schedule")
+    public void createSchedule(@RequestBody(required = true) Schedule sched){
+
+
+        schedDat.insert(sched);
+
+
+
 
     }
 
-    @DeleteMapping("/Schedule/{id}")
-    public void deleteOrg(@PathVariable final int id) {
 
-        schedDate.delete(id);
+    @PutMapping("/schedule")
+    public void updateSchedule(@RequestBody(required = true) Schedule sched) {
+
+
+        schedDat.update(sched);
+
 
     }
+
+
+    @DeleteMapping("/schedule/{id}")
+    public void deleteScheduleByScheduleId(@PathVariable final int id) {
+
+
+        schedDat.deleteScheduleByScheduleId(id);
+
+
+    }
+
+
+    @DeleteMapping("/schedule/service/{id}")
+    public void deleteScheduleByServiceId(@PathVariable final int id) {
+
+
+        schedDat.deleteScheduleByServiceId(id);
+
+
+    }
+
 
 }
